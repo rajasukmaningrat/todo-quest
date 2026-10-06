@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#557d3e" />
+    <meta name="description" content="Pixel Quest — a cozy place to keep track of your tasks." />
+    <title>Todo Quest</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/todoA1.svg" />
+    <link rel="apple-touch-icon" type="image/png" href="./assets/todoA2.png" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <symbol id="icon-critical" viewBox="0 0 48 48">
+        <path d="M18 4h12v6h6v7h5v8h5v19H2V25h5v-8h5v-7h6z" fill="#a83f35" stroke="#25261f" stroke-width="3" stroke-linejoin="miter" />
+        <path d="M21 16h6v14h-6zM21 33h6v5h-6z" fill="#fffdf3" />
+      </symbol>
+      <symbol id="icon-important" viewBox="0 0 48 48">
+        <path d="M7 4h9v40H7z" fill="#b47a42" stroke="#25261f" stroke-width="3" stroke-linejoin="miter" />
+        <path d="M16 6h27v7h-6v7h6v9H16z" fill="#e0a33b" stroke="#25261f" stroke-width="3" stroke-linejoin="miter" />
+      </symbol>
+      <symbol id="icon-personal" viewBox="0 0 48 48">
+        <path d="M18 5h12v5h5v12h-5v5H18v-5h-5V10h5z" fill="#557d3e" stroke="#25261f" stroke-width="3" stroke-linejoin="miter" />
+        <path d="M9 32h6v-5h18v5h6v12H9z" fill="#557d3e" stroke="#25261f" stroke-width="3" stroke-linejoin="miter" />
+      </symbol>
+    </svg>
+    <main class="app-shell" id="today">
+      <header class="app-header">
+        <a class="brand" href="#today" aria-label="Pixel Quest home">
+          <span class="brand-mark" aria-hidden="true">P</span><span>TODO QUEST</span>
+        </a>
+        <div class="clock-panel" aria-label="Local date and time">
+          <time class="clock-time" id="clock-time"></time>
+          <time class="clock-date" id="date-label"></time>
+        </div>
+      </header>
+
+      <section class="login-panel" id="login-panel" aria-labelledby="login-title" hidden>
+        <p class="section-kicker">YOUR OWN LITTLE CORNER</p>
+        <h1 id="login-title">Start your list<span class="heading-period">.</span></h1>
+        <p class="login-copy">Choose a username to open your personal task list. This demo keeps your session and tasks in this browser.</p>
+        <form id="login-form" class="login-form">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" maxlength="32" autocomplete="username" required placeholder="e.g. rajo" />
+          <button class="primary-button" type="submit">Start session</button>
+        </form>
+      </section>
+
+      <div id="todo-app" hidden>
+        <div class="session-bar">
+          <span class="session-name"><svg class="pixel-avatar" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M9 8h6V5h18v3h6v8h4v18h-6v8H11v-5H7V12h2z" fill="#bd8754" stroke="#25261f" stroke-width="3"/><path d="M9 8h6V5h18v3h6v8H9z" fill="#302b2b"/><path d="M15 21h6v5h-6zm12 0h6v5h-6z" fill="#25261f"/><path d="M18 32h12v3H18z" fill="#fffdf3"/><path d="M7 13h4v5H7zm30 0h4v5h-4z" fill="#302b2b"/></svg><span><small>PLAYER:</small><b id="active-username"></b></span></span>
+          <button class="text-button" id="logout-button" type="button">Switch user</button>
+        </div>
+        <section class="dashboard-hud" aria-label="Quest progress summary">
+          <div class="hud-stat"><span class="hud-label">TOTAL QUESTS</span><strong id="total-count">0</strong><span class="hud-foot">IN YOUR JOURNAL</span></div>
+          <div class="hud-stat"><span class="hud-label">IN PROGRESS</span><strong id="remaining-count">0</strong><span class="hud-foot">READY WHEN YOU ARE</span></div>
+          <div class="hud-stat"><span class="hud-label">COMPLETED</span><strong id="completed-count">0</strong><span class="hud-foot">QUESTS CLEARED</span></div>
+        </section>
+        <nav class="category-nav" aria-label="Filter tasks by section">
+          <button class="category is-active" type="button" data-filter="all" aria-pressed="true">All quests <span id="task-count">0</span></button>
+          <button class="category" type="button" data-filter="Work" aria-pressed="false">Work</button>
+          <button class="category" type="button" data-filter="Learning" aria-pressed="false">Learning</button>
+          <button class="category" type="button" data-filter="Personal" aria-pressed="false">Personal</button>
+          <button class="category" type="button" data-filter="Shopping" aria-pressed="false">Shopping</button>
+        </nav>
+
+        <section class="task-section" aria-labelledby="page-title">
+          <div class="section-heading">
+            <div><p class="section-kicker" id="section-kicker">YOUR JOURNAL / QUEST BOARD</p><h1 id="page-title">Quest board<span class="heading-period">.</span></h1></div>
+            <button class="add-task-button" id="open-add-modal" type="button"><span aria-hidden="true">+</span> Add quest</button>
+          </div>
+          <div class="quest-columns">
+            <section class="quest-board" aria-labelledby="progress-title">
+              <h2 class="quest-heading" id="progress-title"><span aria-hidden="true">⛏</span> In progress <span class="section-count" id="active-section-count">0</span></h2>
+              <ul class="task-list" id="in-progress-list" aria-live="polite"></ul>
+              <p class="empty-state" id="active-empty-state" hidden>No active quests. Enjoy the clear skies.</p>
+            </section>
+            <section class="quest-board completed-board" aria-labelledby="completed-title">
+              <h2 class="quest-heading" id="completed-title"><span aria-hidden="true">✓</span> Completed <span class="section-count" id="completed-section-count">0</span></h2>
+              <ul class="task-list" id="completed-list" aria-live="polite"></ul>
+              <p class="empty-state" id="completed-empty-state" hidden>Completed quests will be recorded here.</p>
+            </section>
+          </div>
+          <div class="progress-overview"><span class="progress-track" id="progress-track" role="progressbar" aria-label="Quest completion" aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"><i id="progress-fill"></i></span><strong class="progress-label" id="progress-label">00 / 00 DONE</strong></div>
+        </section>
+
+        <section class="rules-board" aria-labelledby="rules-title">
+          <div class="rules-heading"><p class="section-kicker">FIELD GUIDE / TASK TYPES</p><h2 id="rules-title">Todo rules</h2></div>
+          <div class="rule-cards">
+            <article class="rule-card rule-critical"><svg class="classification-icon" viewBox="0 0 48 48" role="img" aria-labelledby="critical-icon-title"><title id="critical-icon-title">Critical warning icon</title><use href="#icon-critical" /></svg><div><h3>Critical</h3><p>All teams / organization-wide tasks.</p></div></article>
+            <article class="rule-card rule-important"><svg class="classification-icon" viewBox="0 0 48 48" role="img" aria-labelledby="important-icon-title"><title id="important-icon-title">Important flag icon</title><use href="#icon-important" /></svg><div><h3>Important</h3><p>Specific team or specific person.</p></div></article>
+            <article class="rule-card rule-personal"><svg class="classification-icon" viewBox="0 0 48 48" role="img" aria-labelledby="personal-icon-title"><title id="personal-icon-title">Personal user icon</title><use href="#icon-personal" /></svg><div><h3>Personal</h3><p>Learning, personal, and shopping tasks without team context.</p></div></article>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <dialog class="app-dialog" id="add-dialog" aria-labelledby="add-dialog-title">
+      <form id="add-task-form" class="dialog-card">
+        <div class="dialog-heading"><div><p class="section-kicker">A NEW QUEST</p><h2 id="add-dialog-title">Add quest<span class="heading-period">.</span></h2></div><span class="pixel-spark" aria-hidden="true"></span></div>
+        <label class="field-label" for="task-title">Task</label>
+        <input id="task-title" name="title" type="text" maxlength="120" required placeholder="Enter task" />
+        <label class="field-label" id="task-position-label" for="task-position" hidden>Team / person (when applicable)</label>
+        <input id="task-position" name="scopeDetail" type="text" maxlength="100" placeholder="Team or person's name" hidden disabled />
+        <fieldset class="choice-field"><legend>Category</legend><div class="choice-row category-options">
+          <label class="choice"><input type="radio" name="category" value="Personal" required /><span>Personal</span></label>
+          <label class="choice"><input type="radio" name="category" value="Work" /><span>Work</span></label>
+          <label class="choice"><input type="radio" name="category" value="Shopping" /><span>Shopping</span></label>
+          <label class="choice"><input type="radio" name="category" value="Learning" /><span>Learning</span></label>
+        </div></fieldset>
+        <fieldset class="choice-field scope-field" id="work-scope-field" hidden disabled><legend>Work scope</legend><div class="choice-row scope-options">
+          <label class="choice"><input type="radio" name="scope" value="all-teams" /><span>All teams</span></label>
+          <label class="choice"><input type="radio" name="scope" value="specific-team" /><span>Specific team</span></label>
+          <label class="choice"><input type="radio" name="scope" value="specific-person" /><span>Specific person</span></label>
+        </div></fieldset>
+        <label class="choice shopping-context-toggle" id="shopping-context-wrap" hidden><input type="checkbox" id="shopping-work-context" /> Related to a team or person</label>
+        <fieldset class="choice-field scope-field" id="shopping-scope-field" hidden disabled><legend>Shopping context</legend><div class="choice-row scope-options">
+          <label class="choice"><input type="radio" name="scope" value="specific-team" /><span>Specific team</span></label>
+          <label class="choice"><input type="radio" name="scope" value="specific-person" /><span>Specific person</span></label>
+        </div></fieldset>
+        <fieldset class="choice-field level-field"><legend>Task level</legend><div class="choice-row level-options">
+          <label class="choice"><input type="radio" name="level" value="Low" required /><span>Low</span></label>
+          <label class="choice"><input type="radio" name="level" value="Medium" /><span>Medium</span></label>
+          <label class="choice"><input type="radio" name="level" value="High" /><span>High</span></label>
+        </div></fieldset>
+        <label class="field-label" for="task-date">Date (optional)</label>
+        <input id="task-date" name="dueDate" type="date" />
+        <label class="field-label" for="task-time">Time (optional)</label>
+        <input id="task-time" name="dueTime" type="time" />
+        <div class="dialog-actions"><button class="secondary-button" id="cancel-add" type="button">Cancel</button><button class="primary-button" type="submit">Add quest</button></div>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog confirm-dialog" id="delete-dialog" aria-labelledby="delete-dialog-title" aria-describedby="delete-task-name">
+      <div class="dialog-card"><p class="section-kicker">PLEASE CONFIRM</p><h2 id="delete-dialog-title">Delete this task?</h2><p class="delete-task-name" id="delete-task-name"></p><div class="dialog-actions"><button class="secondary-button" id="cancel-delete" type="button">Cancel</button><button class="danger-button" id="confirm-delete" type="button">Delete</button></div></div>
+    </dialog>
+  </body>
+</html>

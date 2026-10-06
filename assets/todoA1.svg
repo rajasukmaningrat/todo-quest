@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" shape-rendering="crispEdges">
+  <title>Todo Quest pixel avatar</title>
+  <path d="M9 8h6V5h18v3h6v8h4v18h-6v8H11v-5H7V12h2z" fill="#bd8754" stroke="#25261f" stroke-width="3"/>
+  <path d="M9 8h6V5h18v3h6v8H9z" fill="#302b2b"/>
+  <path d="M15 21h6v5h-6zm12 0h6v5h-6z" fill="#25261f"/>
+  <path d="M18 32h12v3H18z" fill="#fffdf3"/>
+  <path d="M7 13h4v5H7zm30 0h4v5h-4z" fill="#302b2b"/>
+</svg>
