@@ -22,6 +22,7 @@ const shoppingContextToggle = document.querySelector("#shopping-work-context");
 const shoppingContextWrap = document.querySelector("#shopping-context-wrap");
 const scopeDetailInput = document.querySelector("#task-position");
 const scopeDetailLabel = document.querySelector("#task-position-label");
+const searchInput = document.querySelector("#todo-search");
 
 function getTaskClassification(category, scope) {
   if (category === "Work") return scope === "all-teams" ? "Critical" : "Important";
@@ -240,7 +241,12 @@ function createTaskCard(todo) {
 }
 
 function renderTodos() {
-  const visibleTodos = activeFilter === "all" ? todos : todos.filter((todo) => todo.category === activeFilter);
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  const visibleTodos = todos.filter((todo) => {
+    const matchesCategory = activeFilter === "all" || todo.category === activeFilter;
+    const matchesSearch = todo.title.toLowerCase().includes(searchTerm);
+    return matchesCategory && matchesSearch;
+  });
   const activeTodos = visibleTodos.filter((todo) => !todo.completed);
   const completedTodos = visibleTodos.filter((todo) => todo.completed);
   inProgressList.replaceChildren(...activeTodos.map(createTaskCard));
@@ -414,6 +420,8 @@ document.querySelectorAll("[data-filter]").forEach((button) => {
     renderTodos();
   });
 });
+
+searchInput.addEventListener("input", renderTodos);
 
 const savedUser = getCurrentUser();
 if (savedUser) loginUser(savedUser);
